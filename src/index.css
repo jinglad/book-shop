@@ -13,3 +13,8 @@
   background-color: #6946f4 !important;
   border: #6946f4 !important;
 }
+
+a {
+  text-decoration: none !important;
+  color: white !important;
+}

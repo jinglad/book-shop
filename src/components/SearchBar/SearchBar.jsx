@@ -36,5 +36,6 @@ const SearchInput = styled.div`
     padding-left: 35px;
     background: #6946f4;
     color: white;
+    border-radius: 5px;
   }
 `;

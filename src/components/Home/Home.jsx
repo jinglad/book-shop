@@ -1,3 +1,4 @@
+import Books from "../Books/Books";
 import Header from "../Header/Header";
 import SearchBar from "../SearchBar/SearchBar";
 
@@ -6,6 +7,7 @@ const Home = () => {
     <div>
       <Header />
       <SearchBar />
+      <Books />
     </div>
   );
 };
