@@ -21,6 +21,7 @@ const SearchInput = styled.div`
   width: 500px;
   margin: auto;
   margin-top: 100px;
+  margin-bottom: 100px;
   border-radius: 5px;
   & input {
     border: none;

@@ -6,6 +6,7 @@ import CheckOut from "./components/CheckOut/CheckOut";
 import Header from "./components/Header/Header";
 import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
+import ManageBooks from "./components/Admin/ManageBooks/ManageBooks";
 
 export const CartContext = createContext();
 
@@ -28,6 +29,9 @@ function App() {
           </Route>
           <Route path="/add-book">
             <AddBook />
+          </Route>
+          <Route path="/manage-books">
+            <ManageBooks />
           </Route>
         </Switch>
       </Router>

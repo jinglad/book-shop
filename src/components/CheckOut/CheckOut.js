@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import { CartContext } from "../../App";
 import { books } from "../Books/Books";
 
@@ -53,7 +54,9 @@ const CheckOut = () => {
           </div>
         )}
         <div className="mt-3 float-right">
-          <button className="btn btn-lg btn-primary">Checkout</button>
+          <Link to="/order">
+            <button className="btn btn-lg btn-primary">Checkout</button>
+          </Link>
         </div>
       </div>
     </div>
