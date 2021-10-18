@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "./firebase.config";
@@ -7,7 +7,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
+import { AdminContext } from "../../App";
 
 const app = initializeApp(firebaseConfig);
 
@@ -19,14 +20,19 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
   const [passError, setPasserror] = useState("");
+  const [admin, setAdmin] = useContext(AdminContext);
   const history = useHistory();
+  let location = useLocation();
+  let { from } = location.state || { from: { pathname: "/" } };
+
+  useEffect(async () => {}, []);
 
   const signUp = (e) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        fetch("http://localhost:5000/users", {
+        fetch("https://aeolian-bottlenose-earthquake.glitch.me/users", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ name, email }),
@@ -51,7 +57,17 @@ const Login = () => {
       .then((userCredential) => {
         const user = userCredential.user;
         sessionStorage.setItem("email", user.email);
-        history.push("/");
+        fetch("https://aeolian-bottlenose-earthquake.glitch.me/admin")
+        .then(res => res.json())
+        .then(data => {
+          const isAdmin = data.find(
+            (admin) => admin.email === sessionStorage.getItem("email")
+          );
+          setAdmin(isAdmin);
+        })
+        // console.log(res);
+        
+        history.replace(from);
       })
       .catch((error) => {
         const errorCode = error.code;

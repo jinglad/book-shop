@@ -2,24 +2,32 @@ import { Link } from "react-router-dom";
 import Logo from "../../images/icons/Logo.png";
 import { getAuth, signOut } from "firebase/auth";
 import { useContext, useState } from "react";
-import { CartContext } from "../../App";
+import { AdminContext, CartContext } from "../../App";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import styled from "styled-components";
 
 const Header = () => {
   const [email, setEmail] = useState(sessionStorage.getItem("email"));
   const [cart, setCart] = useContext(CartContext);
+
+  const [admin, setAdmin] = useContext(AdminContext);
+  // const [isAdmin, setIsAdmin] = useState(false);
+
+  // setIsAdmin(admin.find((a) => a.email === email));
+
   const auth = getAuth();
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
         sessionStorage.removeItem("email");
         setEmail("");
+        setAdmin(false);
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <MenuLink className="navbar-brand" to="/">
@@ -53,29 +61,34 @@ const Header = () => {
               Others
             </MenuLink>
           </li>
-          <li className="nav-item">
-            <MenuLink className="nav-link" href="#">
-              Admin
-            </MenuLink>
-          </li>
+          {admin ? (
+            <li className="nav-item">
+              <MenuLink className="nav-link" to="/manage-books">
+                Admin
+              </MenuLink>
+            </li>) : (<li className="nav-item">
+              <MenuLink className="nav-link" to="/order">
+                Orders
+              </MenuLink>
+            </li>
+          )}
           <li className="nav-item">
             <MenuLink className="nav-link" href="#">
               Deals
             </MenuLink>
           </li>
-          {email && (
-            <li className="nav-item" style={{ position: "relative" }}>
-              <MenuLink className="nav-link" to="/checkout">
-                <ShoppingCartIcon />
-                <small
-                  style={{ position: "absolute", left: "15px", top: "-2px" }}
-                >
-                  {cart.length}
-                </small>{" "}
-                Checkout
-              </MenuLink>
-            </li>
-          )}
+
+          <li className="nav-item" style={{ position: "relative" }}>
+            <MenuLink className="nav-link" to="/checkout">
+              <ShoppingCartIcon />
+              <small
+                style={{ position: "absolute", left: "15px", top: "-2px" }}
+              >
+                {cart.length}
+              </small>{" "}
+              Checkout
+            </MenuLink>
+          </li>
           <li className="nav-item">
             {email ? (
               <button onClick={handleSignOut} className="btn btn-primary">
@@ -96,5 +109,5 @@ const Header = () => {
 export default Header;
 
 const MenuLink = styled(Link)`
-  color:black!important;
+  color: black !important;
 `;

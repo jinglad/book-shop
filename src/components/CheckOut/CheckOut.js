@@ -1,18 +1,35 @@
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { CartContext } from "../../App";
-import { books } from "../Books/Books";
 
 const CheckOut = () => {
   const [cart, setCart] = useContext(CartContext);
-  // const [total, setTotal] = useState(null);
+  const history = useHistory();
 
   let totalPrice = 0;
   for (let i = 0; i < cart.length; i++) {
     const element = cart[i];
-    totalPrice += element.price;
+    totalPrice += parseInt(element.price);
   }
-  // setTotal(totalPrice);
+
+  const handleSubmitOrder = () => {
+    fetch("https://aeolian-bottlenose-earthquake.glitch.me/order", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        email: sessionStorage.getItem("email"),
+        books: cart,
+      }),
+    })
+      .then((res) => res.json())
+      .then((success) => {
+        if (success) {
+          alert("Order Submitted Successfully...");
+          setCart([]);
+          history.push("/order");
+        }
+      });
+  };
 
   return (
     <div className="container-fluid">
@@ -36,7 +53,7 @@ const CheckOut = () => {
             </div>
 
             {cart.map((book) => (
-              <div key={book.id} className="row py-2 font-weight-bold">
+              <div key={book._id} className="row py-2 font-weight-bold">
                 <div className="col-md-6">{book.name}</div>
                 <div className="col-md-1 text-center">1</div>
                 <div className="offset-md-4 col-md-1">${book.price}</div>
@@ -54,9 +71,12 @@ const CheckOut = () => {
           </div>
         )}
         <div className="mt-3 float-right">
-          <Link to="/order">
-            <button className="btn btn-lg btn-primary">Checkout</button>
-          </Link>
+          <button
+            onClick={handleSubmitOrder}
+            className="btn btn-lg btn-primary"
+          >
+            Checkout
+          </button>
         </div>
       </div>
     </div>
