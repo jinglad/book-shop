@@ -6,6 +6,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { useHistory } from "react-router";
 
@@ -68,6 +69,18 @@ const Login = () => {
       setConfirmPass(e.target.value);
     }
   };
+
+  const forgotPassword = () => {
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        alert("Password reset email sent...");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  };
+
   return (
     <div
       className="d-flex justify-content-center align-items-center"
@@ -117,7 +130,7 @@ const Login = () => {
                 <input type="checkbox" id="rememberMe" className="mr-2" />
                 <label htmlFor="#rememberMe">Remember Me</label>
               </div>
-              <AnchorTag>Forgot Password</AnchorTag>
+              <AnchorTag onClick={forgotPassword}>Forgot Password</AnchorTag>
             </div>
           )}
           <div>
