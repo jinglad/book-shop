@@ -6,7 +6,7 @@ const Book = ({ book, addToCart }) => {
   const img = `https://aeolian-bottlenose-earthquake.glitch.me/${image}`;
 
   return (
-    <div className="col-md-4">
+    <div className="col-md-6 col-lg-4">
       <BookContainer>
         <img src={img} alt="" />
         <h3>{name}</h3>
@@ -37,7 +37,7 @@ const BookContainer = styled.div`
     object-fit: contain;
     background-color: lightgray;
     width: 100%;
-    height: 334px;
+    height: auto;
     padding: 25px;
     border-radius: 10px;
     margin-bottom: 5px;

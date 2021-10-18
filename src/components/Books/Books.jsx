@@ -4,20 +4,18 @@ import { CartContext } from "../../App";
 import Book from "../Book/Book";
 import Loader from "../../images/icons/loader2.gif";
 
-
-
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [cart, setCart] = useContext(CartContext);
 
   useEffect(() => {
     fetch("https://aeolian-bottlenose-earthquake.glitch.me/books")
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      setBooks(data);
-    })
-  },[]);
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setBooks(data);
+      });
+  }, []);
 
   const addToCart = (book) => {
     const newCart = [...cart];
@@ -31,7 +29,7 @@ const Books = () => {
     setCart(newCart);
   };
 
-  if(books.length > 0) {
+  if (books.length > 0) {
     return (
       <div className="container-fluid mt-5">
         <div className="row mx-5">
