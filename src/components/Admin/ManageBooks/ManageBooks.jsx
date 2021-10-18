@@ -1,19 +1,42 @@
 import Sidebar from "../Sidebar/Sidebar";
 import EditBtn from "../../../images/icons/editbtn.png";
 import DeleteBtn from "../../../images/icons/deletebtn.png";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const ManageBooks = () => {
+  const [books, setBooks] = useState([]);
+  const [deleted, setDeleted] = useState(1);
+
+  useEffect(() => {
+    fetch("https://aeolian-bottlenose-earthquake.glitch.me/books")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setBooks(data);
+      });
+  }, [deleted]);
+
+  const handleDelete = (id) => {
+    fetch(`https://aeolian-bottlenose-earthquake.glitch.me/deleteBook/${id}`, {
+      method: "DELETE",
+      headers: { "content-type": "application/json" },
+    })
+      .then((res) => res.json())
+      .then((success) => {
+        setDeleted(deleted + 1);
+      });
+  };
+
   return (
     <div className="container-fluid">
       <div className="row">
         <div className="col-md-2">
           <Sidebar />
         </div>
-        <div className="col-md-8 mt-4">
+        <div className="col-md-8 mt-4 offset-md-1">
           <h3>Manage Books</h3>
-          <div
-            style={{ padding: "30px", background: "#F4F7FC" }}
-          >
+          <div style={{ padding: "30px", background: "#F4F7FC" }}>
             <div
               style={{
                 padding: "10px 30px",
@@ -27,33 +50,33 @@ const ManageBooks = () => {
                 <div className="offset-md-1 col-md-1">Price</div>
                 <div className="offset-md-1 col-md-1 text-center">Action</div>
               </div>
-              <div className="row mt-2">
-                <div className="col-md-4">Javascript EveryWhere</div>
-                <div className="col-md-4">Adam D. Scottark Lutz</div>
-                <div className="offset-md-1 col-md-1">$234</div>
-                <div className="offset-md-1 col-md-1">
-                    <img src={EditBtn} alt="" style={{width:"30px", marginRight:"5px", cursor: "pointer"}} />
-                    <img src={DeleteBtn} alt="" style={{width:"30px",cursor: "pointer"}} />
-                </div>
-              </div>
-              <div className="row mt-2">
-                <div className="col-md-4">Javascript EveryWhere</div>
-                <div className="col-md-4">Adam D. Scottark Lutz</div>
-                <div className="offset-md-1 col-md-1">$234</div>
-                <div className="offset-md-1 col-md-1">
-                    <img src={EditBtn} alt="" style={{width:"30px", marginRight:"5px", cursor: "pointer"}} />
-                    <img src={DeleteBtn} alt="" style={{width:"30px",cursor: "pointer"}} />
-                </div>
-              </div>
-              <div className="row mt-2">
-                <div className="col-md-4">Javascript EveryWhere</div>
-                <div className="col-md-4">Adam D. Scottark Lutz</div>
-                <div className="offset-md-1 col-md-1">$234</div>
-                <div className="offset-md-1 col-md-1">
-                    <img src={EditBtn} alt="" style={{width:"30px", marginRight:"5px", cursor: "pointer"}} />
-                    <img src={DeleteBtn} alt="" style={{width:"30px",cursor: "pointer"}} />
-                </div>
-              </div>
+              {books.length > 0 &&
+                books.map((book, i) => (
+                  <div className="row mt-2">
+                    <div className="col-md-4">{book.name}</div>
+                    <div className="col-md-4">{book.author}</div>
+                    <div className="offset-md-1 col-md-1">${book.price}</div>
+                    <div className="offset-md-1 col-md-1">
+                      <Link to={`/update-book/${book._id}`}>
+                        <img
+                          src={EditBtn}
+                          alt=""
+                          style={{
+                            width: "40%",
+                            marginRight: "5px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </Link>
+                      <img
+                        src={DeleteBtn}
+                        alt=""
+                        style={{ width: "40%", cursor: "pointer" }}
+                        onClick={() => handleDelete(book._id)}
+                      />
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         </div>

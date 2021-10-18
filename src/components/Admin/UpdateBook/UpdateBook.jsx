@@ -1,10 +1,11 @@
-import Sidebar from "../Sidebar/Sidebar";
-import styled from "styled-components";
-import cloud from "../../../images/icons/cloud.png";
 import { useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
+import { AddBookContainer, Label } from "../AddBook/AddBook";
+import Sidebar from "../Sidebar/Sidebar";
+import cloud from "../../../images/icons/cloud.png"
 
-const AddBook = () => {
+const UpdateBook = () => {
+  const { id } = useParams();
   const [name, setName] = useState("");
   const [author, setAuthor] = useState("");
   const [price, setPrice] = useState("");
@@ -16,28 +17,22 @@ const AddBook = () => {
     setFile(newFile);
   };
 
-  const handleSubmit = () => {
+  const handleUpdate = () => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("name", name);
     formData.append("author", author);
     formData.append("price", price);
-
-    fetch("https://aeolian-bottlenose-earthquake.glitch.me/add-book", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((success) => {
-        if (success) {
-          alert("Book is added...");
-          history.push("/");
-        }
+      fetch(`https://aeolian-bottlenose-earthquake.glitch.me/updateBook/${id}`,{
+          method:"PATCH",
+          body:formData
       })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+      .then(res => res.json())
+      .then(success => {
+          alert("updated successfully...");
+          history.push("/manage-books");
+      })
+  }
 
   return (
     <div className="container-fluid">
@@ -45,8 +40,8 @@ const AddBook = () => {
         <div className="col-md-2">
           <Sidebar />
         </div>
-        <div className="col-md-8 offset-md-1 mt-3">
-          <h3>Add Book</h3>
+        <div className="col-md-8 mt-3 offset-md-1">
+          <h3>Update Book</h3>
           <div
             style={{ padding: "30px", background: "#F4F7FC", height: "600px" }}
           >
@@ -65,7 +60,7 @@ const AddBook = () => {
                   <label>Author Name</label>
                   <input
                     type="text"
-                    placeholder="Enter Author"
+                    placeholder="Enter Name"
                     className="form-control"
                     onChange={(e) => setAuthor(e.target.value)}
                   />
@@ -76,7 +71,7 @@ const AddBook = () => {
                   <label>Add Price</label>
                   <input
                     type="text"
-                    placeholder="Enter Price"
+                    placeholder="Enter Name"
                     className="form-control"
                     onChange={(e) => setPrice(e.target.value)}
                   />
@@ -98,7 +93,7 @@ const AddBook = () => {
               </div>
             </AddBookContainer>
             <button
-              onClick={handleSubmit}
+                onClick={handleUpdate}
               className="btn btn-primary float-right"
             >
               Save
@@ -110,27 +105,4 @@ const AddBook = () => {
   );
 };
 
-export default AddBook;
-
-export const AddBookContainer = styled.div`
-  box-shadow: 0 0 20px lightgray;
-  padding: 20px;
-  border-radius: 10px;
-  margin-top: 50px;
-  margin-bottom: 20px;
-  background: white;
-`;
-
-export const Label = styled.label`
-  border: 1px solid #6946f4;
-  background-color: #6946f424;
-  color: #6946f4;
-  padding: 5px 10px;
-  border-radius: 5px;
-  text-align: center;
-  margin-top: 8px;
-  cursor: pointer;
-  & input {
-    display: none;
-  }
-`;
+export default UpdateBook;
